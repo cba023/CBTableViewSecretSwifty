@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SwiftyJSON
 import YYModel
 
 class SecretVC: UIViewController {
