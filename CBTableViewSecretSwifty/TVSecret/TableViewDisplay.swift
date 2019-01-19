@@ -28,7 +28,7 @@ class TableViewRowDisplay {
 
 class TableViewSectionDisplay {
     
-    let rows: [TableViewRowDisplay] = []
+    var rows: [TableViewRowDisplay] = []
     let headerHeight: CGFloat!
     let footerHeight: CGFloat!
     let headerEstimatedHeight: CGFloat!
@@ -38,22 +38,22 @@ class TableViewSectionDisplay {
     public var viewForHeader: ((_ tableView: UITableView?, _ section: Int) -> UIView)?
     public var viewForFooter: ((_ tableView: UITableView?, _ section: Int) -> UIView)?
     
-    init(headerHeight: CGFloat, autoHeaderHeight: Bool, footerHeight: CGFloat, autoFooterHeight: Bool, rowsCallback: (_ rows: Array<TableViewRowDisplay>) -> Void) {
+    init(headerHeight: CGFloat, autoHeaderHeight: Bool, footerHeight: CGFloat, autoFooterHeight: Bool, rowsCallback: (_ rows: inout Array<TableViewRowDisplay>) -> Void) {
         self.autoHeaderHeight = autoHeaderHeight
         self.autoFooterHeight = autoFooterHeight
         self.headerEstimatedHeight = headerHeight
         self.footerEstimatedHeight = footerHeight
         self.headerHeight = self.autoHeaderHeight ? UITableView.automaticDimension : headerHeight
         self.footerHeight = self.autoFooterHeight ? UITableView.automaticDimension : footerHeight
-        rowsCallback(self.rows)
+        rowsCallback(&rows)
     }
 }
 
 class TableViewDisplay {
     
-    let sections: Array<TableViewSectionDisplay> = []
+    var sections: Array<TableViewSectionDisplay> = []
     
-    init(sectionsCallback: (_ sections: Array<TableViewSectionDisplay>) -> Void) {
-        sectionsCallback(sections)
+    init(sectionsCallback: (_ sections: inout Array<TableViewSectionDisplay>) -> Void) {
+        sectionsCallback(&sections)
     }
 }

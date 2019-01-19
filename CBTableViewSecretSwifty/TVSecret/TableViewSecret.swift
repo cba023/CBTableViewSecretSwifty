@@ -77,6 +77,9 @@ class TableViewSecret: NSObject, UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let sectionDisplay = self.display.sections[indexPath.section]
         let rowDisplay = sectionDisplay.rows[indexPath.row]
+        if self.didSelectRowAtIndexPath != nil {
+            self.didSelectRowAtIndexPath!(tableView, indexPath)
+        }
         if rowDisplay.didSelectRowAtIndexPath != nil {
             rowDisplay.didSelectRowAtIndexPath!(tableView, indexPath)
         }

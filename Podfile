@@ -7,7 +7,7 @@ target 'CBTableViewSecretSwifty' do
 
   # Pods for CBTableViewSecretSwifty
   pod 'SwiftyJSON', '~> 4.2.0'
-
+  pod 'YYModel', '~> 1.0.4'
   target 'CBTableViewSecretSwiftyTests' do
     inherit! :search_paths
     # Pods for testing
