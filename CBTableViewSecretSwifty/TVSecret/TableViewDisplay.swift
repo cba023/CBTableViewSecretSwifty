@@ -31,12 +31,22 @@ class TableViewSectionDisplay {
     let autoFooterHeight: Bool!
     public var viewForHeader: ((_ tableView: UITableView?, _ section: Int) -> UIView)?
     public var viewForFooter: ((_ tableView: UITableView?, _ section: Int) -> UIView)?
+//    
+//    init(headerHeight: CGFloat, autoHeaderHeight: Bool, footerHeight: CGFloat, autoFooterHeight: Bool, rowsCallback: (_ rows: inout Array<TableViewRowDisplay>) -> Void) {
+//        self.autoHeaderHeight = autoHeaderHeight
+//        self.autoFooterHeight = autoFooterHeight
+//        self.headerHeight = self.autoHeaderHeight ? UITableView.automaticDimension : headerHeight
+//        self.footerHeight = self.autoFooterHeight ? UITableView.automaticDimension : footerHeight
+//        rowsCallback(&rows)
+//    }
     
-    init(headerHeight: CGFloat, autoHeaderHeight: Bool, footerHeight: CGFloat, autoFooterHeight: Bool, rowsCallback: (_ rows: inout Array<TableViewRowDisplay>) -> Void) {
+    init(headerHeight: CGFloat, footerHeight: CGFloat, autoHeaderHeight: Bool, autoFooterHeight: Bool, viewForHeader:((_ tableView: UITableView?, _ section: Int) -> UIView)?, viewForFooter:((_ tableView: UITableView?, _ section: Int) -> UIView)?, rowsCallback: (_ rows: inout Array<TableViewRowDisplay>) -> Void) {
         self.autoHeaderHeight = autoHeaderHeight
         self.autoFooterHeight = autoFooterHeight
         self.headerHeight = self.autoHeaderHeight ? UITableView.automaticDimension : headerHeight
         self.footerHeight = self.autoFooterHeight ? UITableView.automaticDimension : footerHeight
+        self.viewForHeader = viewForHeader
+        self.viewForFooter = viewForFooter
         rowsCallback(&rows)
     }
 }
