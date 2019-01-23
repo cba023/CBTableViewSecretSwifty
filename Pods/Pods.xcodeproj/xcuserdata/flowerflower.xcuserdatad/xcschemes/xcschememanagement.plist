@@ -4,28 +4,28 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Pods-CBTableViewSecretSwifty.xcscheme</key>
+		<key>HandyJSON.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
-		<key>Pods-CBTableViewSecretSwiftyTests.xcscheme</key>
+		<key>Pods-CBTableViewSecretSwifty.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
-		<key>Pods-CBTableViewSecretSwiftyUITests.xcscheme</key>
+		<key>Pods-CBTableViewSecretSwiftyTests.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>2</integer>
 		</dict>
-		<key>YYModel.xcscheme</key>
+		<key>Pods-CBTableViewSecretSwiftyUITests.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>

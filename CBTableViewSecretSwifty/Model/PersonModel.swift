@@ -7,14 +7,14 @@
 //
 
 import UIKit
-import YYModel
+import HandyJSON
 
-@objcMembers
-
-class PersonModel: NSObject, YYModel {
+class PersonModel: HandyJSON {
     var gender: String?
     var age: Int = 0
     var country: String?
     var height: Int = 0
     var name: String?
+    
+    required init() {}
 }

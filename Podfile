@@ -6,7 +6,8 @@ target 'CBTableViewSecretSwifty' do
   use_frameworks!
 
   # Pods for CBTableViewSecretSwifty
-  pod 'YYModel', '~> 1.0.4'
+#  pod 'YYModel', '~> 1.0.4'
+pod 'HandyJSON', '~> 4.2.1'
   target 'CBTableViewSecretSwiftyTests' do
     inherit! :search_paths
     # Pods for testing

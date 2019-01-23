@@ -7,12 +7,12 @@
 //
 
 import UIKit
-import YYModel
+import HandyJSON
 
-@objcMembers
-
-class AppliancesModel: NSObject, YYModel {
+class AppliancesModel: HandyJSON {
     var color: String?
     var price: CGFloat = 0.0
     var name: String?
+    
+    required init() {}
 }

@@ -7,29 +7,23 @@
 //
 
 import UIKit
-import YYModel
+import HandyJSON
 
-@objcMembers
-
-class Ext_action :NSObject, YYModel {
+struct Ext_action :HandyJSON {
     var fimgurl30: String?
     var fimgurl33: String?
     var fimgurl32: String?
     
 }
 
-@objcMembers
-
-class Ext_data :NSObject, YYModel {
+struct Ext_data :HandyJSON {
     var src: String?
     var desc: String?
     var ext_action: Ext_action?
     
 }
 
-@objcMembers
-
-class Newslist :NSObject, YYModel {
+struct Newslist :HandyJSON {
     var ext_data: Ext_data?
     var source: String?
     var time: String?
@@ -60,14 +54,13 @@ class Newslist :NSObject, YYModel {
     
 }
 
-@objcMembers
-
-class NewsModel :NSObject, YYModel {
+class NewsModel :HandyJSON {
     var ret: Int = 0
     var newslist: [Newslist]?
     static func modelContainerPropertyGenericClass() -> [String : Any]? {
         return ["newslist": Newslist.self]
     }
     
+    required init() {}
 }
 

@@ -1,16 +1,16 @@
 PODS:
-  - YYModel (1.0.4)
+  - HandyJSON (4.2.1)
 
 DEPENDENCIES:
-  - YYModel (~> 1.0.4)
+  - HandyJSON (~> 4.2.1)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
-    - YYModel
+    - HandyJSON
 
 SPEC CHECKSUMS:
-  YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
+  HandyJSON: d0c5fc80204f29056d59d3e5c4587fa0b16b60a8
 
-PODFILE CHECKSUM: fd99694d0a03f944cbd0cd96c191b96451d02c7a
+PODFILE CHECKSUM: 54ba19a86d45f53865cd717d2cfc03110a0d5561
 
 COCOAPODS: 1.5.3

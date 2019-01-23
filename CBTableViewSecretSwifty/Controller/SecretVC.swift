@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import YYModel
 
 class SecretVC: UIViewController {
 
@@ -34,9 +33,9 @@ class SecretVC: UIViewController {
         let dicNews = Util.getJsonData(from: "NewsList", fileType: "json")
         let dicPerson = Util.getJsonData(from: "Person", fileType: "json")
         let dicAppliances = Util.getJsonData(from: "Appliances", fileType: "json")
-        newsModel = NewsModel.yy_model(with: dicNews!)
-        personModel = PersonModel.yy_model(with: dicPerson!)
-        appliancesModel = AppliancesModel.yy_model(with: dicAppliances!)
+        newsModel = NewsModel.deserialize(from: dicNews)
+        personModel = PersonModel.deserialize(from: dicPerson)
+        appliancesModel = AppliancesModel.deserialize(from: dicAppliances)
     }
     
     func display() {
