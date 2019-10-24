@@ -61,19 +61,19 @@ CBTableViewDisplay | 外层类。用作CBTableViewSectionDisplay的外部调用�
 > CBTableViewDisplay
 
 ```
-+ (instancetype)displayWithSectionsBlock:(void(^)(NSMutableArray<CBTableViewSectionDisplay *>* sections))sectionsBlock;
+init(sectionsCallback: (_ sections: inout Array<TableViewSectionDisplay>) -> Void)
 ```
 
 > CBTableViewSectionDisplay
 
 ```
-+ (instancetype)displayWithHeaderHeight:(CGFloat)headerHeight autoHeaderHeight:(BOOL)autoHeaderHeight footerHeight:(CGFloat)footerHeight autoFooterHeight:(BOOL)autoFooterHeight rowsBlock:(void (^)(NSMutableArray<CBTableViewRowDisplay *> * rows))rowsBlock;
+init(headerHeight: CGFloat, footerHeight: CGFloat, autoHeaderHeight: Bool, autoFooterHeight: Bool, viewForHeader:((_ tableView: UITableView?, _ section: Int) -> UIView)?, viewForFooter:((_ tableView: UITableView?, _ section: Int) -> UIView)?, rowsCallback: (_ rows: inout Array<TableViewRowDisplay>) -> Void)
 ```
 
 > CBTableViewRowDisplay
 
 ```
-+ (instancetype)displayWithCellHeight:(CGFloat)cellHeight autoCellHeight:(BOOL)autoCellHeight cellForRowAtIndexPath:(UITableViewCell *(^)(UITableView *, NSIndexPath *))cellForRowAtIndexPath;
+init(cellHeight:CGFloat, autoCellHeight:Bool, cellForRowAt indexPath:@escaping (_ tableView: UITableView, _ indexPath:IndexPath) -> UITableViewCell) 
 ```
 
 
@@ -83,74 +83,61 @@ CBTableViewDisplay | 外层类。用作CBTableViewSectionDisplay的外部调用�
 > controller中的display方法
 
 ```
-- (void)display {
-    CBTableViewDisplay *display = [CBTableViewDisplay displayWithSectionsBlock:^(NSMutableArray<CBTableViewSectionDisplay *> *sections) {
+func display() {
+    let display = TableViewDisplay(sectionsCallback: { (sections) in
         // 1.News
-        CBTableViewSectionDisplay *sec0 = [CBTableViewSectionDisplay displayWithHeaderHeight:45.0 autoHeaderHeight:NO footerHeight:50.0 autoFooterHeight:NO rowsBlock:^(NSMutableArray<CBTableViewRowDisplay *> *rows) {
-            for (NSInteger i = 0; i < self.newsModel.newslist.count; i++) {
-                CBTableViewRowDisplay * row = [CBTableViewRowDisplay displayWithCellHeight:60.0 autoCellHeight:YES cellForRowAtIndexPath:^UITableViewCell *(UITableView *tableView, NSIndexPath *indexPath) {
-                    NewsListTableViewCell *cell = [tableView cellWithClass:[NewsListTableViewCell class] fileType:FileTypeNib];
-                    cell.lblTitle.text = self.newsModel.newslist[i].title;
-                    cell.lblSubTitle.text = self.newsModel.newslist[i].source;
-                    return cell;
-                }];
-                row.didSelectRowAtIndexPath = ^(UITableView *tableView, NSIndexPath *indexPath) {
-                    NSLog(@"新闻列表点击 - %ld - %ld -", indexPath.section, indexPath.row);
-                };
-                [rows addObject:row];
+        sections.append(TableViewSectionDisplay(headerHeight: 45.0, footerHeight: 50.0, autoHeaderHeight: false, autoFooterHeight: false, viewForHeader: { (tableView, section) in
+            let header = tableView?.headerFooter(nibClass: NewsListTableHeaderView.self) as! NewsListTableHeaderView
+            header.lblName.text = "新闻列表"
+            return header
+        }, viewForFooter: { (tableView, section) in
+            let footer = tableView?.headerFooter(nibClass: NewsListTableFooterView.self) as! NewsListTableFooterView
+            footer.lblDesc.text = "上面是新闻"
+            return footer
+        }, rowsCallback: { (rows) in
+            for (_, value) in (newsModel?.newslist!.enumerated())! {
+                let row = TableViewRowDisplay(cellHeight: 60.0, autoCellHeight: true, cellForRowAt: { (tableView, indexPath) -> UITableViewCell in
+                    let cell = tableView.cell(nibClass: NewsListTableViewCell.self) as! NewsListTableViewCell
+                    cell.lblTitle.text = value.title
+                    cell.lblSubTitle.text = value.source
+                    return cell
+                })
+                rows.append(row)
             }
-        }];
-        sec0.viewForHeader = ^UIView *(UITableView *tableView, NSInteger section) {
-            NewsListTableHeaderView *header = [tableView headerFooterFromNib:[NewsListTableHeaderView class]];
-            header.lblTitle.text = @"新闻列表";
-            return header;
-        };
-        sec0.viewForFooter = ^UIView *(UITableView *tableView, NSInteger section) {
-            NewsListTableFooterView * footer = [tableView headerFooterFromNib:[NewsListTableFooterView class]];
-            footer.lblDesc.text = @"上面是新闻";
-            return footer;
-        };
+        }))
         // 2.Appliances
-        CBTableViewSectionDisplay *sec1 = [CBTableViewSectionDisplay displayWithHeaderHeight:90.0 autoHeaderHeight:NO footerHeight:CGFLOAT_MIN autoFooterHeight:NO rowsBlock:^(NSMutableArray<CBTableViewRowDisplay *> *rows) {
-            CBTableViewRowDisplay *row = [CBTableViewRowDisplay displayWithCellHeight:100.0 autoCellHeight:NO cellForRowAtIndexPath:^UITableViewCell *(UITableView *tableView, NSIndexPath *indexPath) {
-                AppliancesTableViewCell *cell = [tableView cellWithClass:[AppliancesTableViewCell class] fileType:FileTypeNib];
-                AppliancesModel *md = self.appliancesModel;
-                cell.lblName.text = md.name;
-                cell.lblColor.text = md.color;
-                cell.lblPrice.text = [NSString stringWithFormat:@"%.2f",md.price];
-                return cell;
-            }];
-            [rows addObject:row];
-        }];
-        sec1.viewForHeader = ^UIView *(UITableView *tableView, NSInteger section) {
-            AppliancesTableHeaderView *header = [tableView headerFooterFromNib:[AppliancesTableHeaderView class]];
-            header.lblName.text = @"这里的电器";
-            return header;
-        };
+        sections.append(TableViewSectionDisplay(headerHeight: 90.0, footerHeight: CGFloat.leastNormalMagnitude, autoHeaderHeight: false, autoFooterHeight: false, viewForHeader: { (tableView, section) -> UIView in
+            let header = tableView?.headerFooter(nibClass: AppliancesTableHeaderView.self) as! AppliancesTableHeaderView
+            header.lblName.text = "这里的电器"
+            return header
+        }, viewForFooter: nil, rowsCallback: { (rows) in
+            rows.append(TableViewRowDisplay(cellHeight: 100.0, autoCellHeight: false, cellForRowAt: { (tableView, indexPath) -> UITableViewCell in
+                let cell = tableView.cell(nibClass: AppliancesTableViewCell.self) as! AppliancesTableViewCell
+                cell.lblName.text = self.appliancesModel?.name
+                cell.lblColor.text = self.appliancesModel?.color
+                cell.lblPrice.text = "\(self.appliancesModel!.price)"
+                return cell
+            }))
+        }))
         // 3. Animal & Person
-        CBTableViewSectionDisplay *sec2 = [CBTableViewSectionDisplay displayWithHeaderHeight:50.0 autoHeaderHeight:NO footerHeight:CGFLOAT_MIN autoFooterHeight:NO rowsBlock:^(NSMutableArray<CBTableViewRowDisplay *> *rows) {
-            CBTableViewRowDisplay *row0 = [CBTableViewRowDisplay displayWithCellHeight:self.tableView.bounds.size.width / 16.0 * 9.0 autoCellHeight:NO cellForRowAtIndexPath:^UITableViewCell *(UITableView *tableView, NSIndexPath *indexPath) {
-                AnimalTCell *cell = [tableView cellWithClass:[AnimalTCell class] fileType:FileTypeNib];
-                return cell;
-            }];
-            CBTableViewRowDisplay *row1 = [CBTableViewRowDisplay displayWithCellHeight:80.0 autoCellHeight:NO cellForRowAtIndexPath:^UITableViewCell *(UITableView *tableView, NSIndexPath *indexPath) {
-                PersonTCell * cell = [tableView cellWithClass:[PersonTCell class] fileType:FileTypeClass];
-                cell.lblName.text = @"张三";
-                return cell;
-            }];
-            [rows addObject:row0];
-            [rows addObject:row1];
-        }];
-        [sections addObject:sec0];
-        [sections addObject:sec1];
-        [sections addObject:sec2];
-    }];
-    _tvSecret = [CBTableViewSecret secretWithTableView:self.tableView display:display];
-    _tvSecret.didSelectRowAtIndexPath = ^(UITableView *tableView, NSIndexPath *indexPath) {
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    };
+        sections.append(TableViewSectionDisplay(headerHeight: 50.0, footerHeight: CGFloat.leastNormalMagnitude, autoHeaderHeight: false, autoFooterHeight: false, viewForHeader: nil, viewForFooter: nil, rowsCallback: { (rows) in
+            rows.append(TableViewRowDisplay(cellHeight: self.tableView.bounds.size.width / 16.0 * 9.0, autoCellHeight: false, cellForRowAt: { (tableView, indexPath) -> UITableViewCell in
+                let cell = tableView.cell(nibClass: AnimalTCell.self) as! AnimalTCell
+                return cell
+            }))
+            rows.append(TableViewRowDisplay(cellHeight: 80.0, autoCellHeight: false, cellForRowAt: { (tableView, indexPath) -> UITableViewCell in
+                let cell = tableView.cell(anyClass: PersonTCell.self) as! PersonTCell
+                cell.lblName.text = "张三"
+                return cell
+            }))
+        }))
+    })
+    self.secret = TableViewSecret(tableView: tableView, display: display)
+    self.secret.didSelectRowAtIndexPath = {(tableView, indexPath)
+        in
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 }
-
 ```
 
 如上述，通过display的block回调，我们可以对tableView的具体实现控制。
